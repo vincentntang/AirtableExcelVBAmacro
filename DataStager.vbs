@@ -9,7 +9,7 @@ Sub airtableCleaner()
     
     Dim Answer As VbMsgBoxResult
         
-    Answer = MsgBox("Do you want to run this macro? Please use airtable Download as CSV - Column 1: Primary key, Column 2: Airtable Link", vbYesNo, "Run Macro")
+    Answer = MsgBox("Do you want to run this macro? Please use airtable Download as CSV - Column 1: Primary key, Column 2: Airtable Linkz", vbYesNo, "Run Macro")
         
     If Answer = vbYes Then
     counter = 1 'this counts and resets on items that are the same
@@ -49,29 +49,19 @@ Sub airtableCleaner()
     LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:= _
     False, ReplaceFormat:=False
     
-    'Cleanup Broken links %5B1%5D in Column C
-    Columns("C:C").Select
-    Range("C40").Activate
-    Selection.Replace What:="%5B1%5D", Replacement:="[1]", LookAt:=xlPart, _
-        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
-        ReplaceFormat:=False
-        
+    'Create the batch files to name in column C
+    Range("D2").Select
+    ActiveCell.FormulaR1C1 = _
+    "=CONCATENATE(""COPY "",CHAR(34),RC[-1],CHAR(34),"" "", CHAR(34), ""c:\doggo\"",RC[-3],"".png"",CHAR(34))"
+    Range("D2").Select
+    Selection.AutoFill Destination:=Range("D2:D" & argCounter + 1)
+    'Range("D2:D" & argCounter+1).Select
     
-        
-    'Clean Up Each File
-    For Each Cell In Range("C2:C" & argCounter)
-        If Not dict.exists(CStr(Cell.Value)) Then
-            dict.Add Key:=CStr(Cell.Value), Item:=argCounter 'item irrelevant
-            counter = 0
-        Else
-            A = Right(Cell.Value, 4)
-            B = Left(Cell.Value, Len(Cell.Value) - 4)
-            Cell.Value = B & "[" & counter & "]" & A
-            Cell.Value = Cell.Value & "[" & counter & "]"
-            counter = counter + 1
-        End If
-    Next Cell
-    Set dict = Nothing 'clear dictionary before exit
+    'Delete row 1 row information
+    Rows("1:1").Select
+    Selection.Delete Shift:=xlUp
+    
+    
     End If
 End Sub
 

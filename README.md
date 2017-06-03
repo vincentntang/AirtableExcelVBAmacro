@@ -33,3 +33,13 @@ Press F5
 
 See blog post for more details (later will update)
 
+# What is ultimate goal of this excel VBA?
+
+Make all image assets locally from airtable. Ideally the least number of steps would be:
+
+1. Download the CSV file (Col 1:PrimaryKey, Col2: ImageLink) say `C:/AirtableDL`
+2. Click one button on the ribbon menu (Creates 4 columns of data, automatically downloads image col 2 in same location, automatically create and run batch file)
+3. All assets finished sitting inside same directory
+
+Would solve a lot of issues related to digitally managing image assets in 2 clicks
+

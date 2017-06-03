@@ -13,5 +13,9 @@ It outputs the following columns of data
 - Column 3 = airtables original file name on upload
 - Column 4 = batch commands for duplicating / creating images
 
+Column 2 is used for the bulk image downloader of your choice (ExtremePictureFinder)
+
+Column 4 is for windows .bat file used for duplicating / renaming files
+
 See blog post for more details (later will update)
 

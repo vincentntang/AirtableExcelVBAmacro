@@ -17,5 +17,19 @@ Column 2 is used for the bulk image downloader of your choice (ExtremePictureFin
 
 Column 4 is for windows .bat file used for duplicating / renaming files
 
+# How do I use this macro?
+
+Open up excel
+
+Press ALT+F11
+
+Create a module
+
+Paste the code
+
+Press F5
+
+# Where can I read more about the entire process?
+
 See blog post for more details (later will update)
 

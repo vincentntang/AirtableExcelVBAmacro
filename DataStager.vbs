@@ -45,6 +45,10 @@ Public Const INTERNET_FLAG_RELOAD As Long = &H80000000
 Sub airtableCleaner()
     Dim argCounter As Integer
     Dim Answer As VbMsgBoxResult
+    
+    Dim strProgramName As String
+    Dim strArgument As String
+    Dim shellCommand As String
 
     folderPath = Application.ActiveWorkbook.Path 'Example C:/downloads
     myPath = Application.ActiveWorkbook.FullName 'Example C:/downloads/book1.csv
@@ -99,7 +103,7 @@ Sub airtableCleaner()
     False, ReplaceFormat:=False
     
     '-------------------------------------------------------------------------
-    'Cleanup Broken links %5B1%5D in Column C  (only needed for extremePictureFinder, not with ExcelVBA URLimagefinder
+    'Cleanup Broken links %5B1%5D in Column C  (only needed for extremePictureFinder)
     '-------------------------------------------------------------------------
     'Columns("C:C").Select
     'Range("C40").Activate
@@ -107,6 +111,13 @@ Sub airtableCleaner()
     'SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
     'ReplaceFormat:=False
     '-------------------------------------------------------------------------
+    
+    'Cleanup Broken images using excelVBA downloader %5B1%5D = B1D
+     Columns("C:C").Select
+     Range("C40").Activate
+     Selection.Replace What:="%5B1%5D", Replacement:="B1D", LookAt:=xlPart, _
+     SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+     ReplaceFormat:=False
 
     
     'Create Column D batch files
@@ -134,8 +145,10 @@ Sub airtableCleaner()
     Call ExportRangetoBatch
     
     'Ask user to run bat file now or later
-    Shell "cmd.exe /k cd " & folderPath & " && newcurl.bat"
-
+    'Shell "cmd.exe /k cd " & folderPath & " && newcurl.bat"
+    'Shell "cmd.exe /k ""cd " & """ & ThisWorkbook.path & """ & " newcurl.bat"""
+    shellCommand = """" & folderPath & "\" & "newcurl.bat" & """"
+    Call Shell(shellCommand, vbNormalFocus)
     
     End If
 End Sub
@@ -153,10 +166,15 @@ Sub ExportRangetoBatch()
 
     Dim OutputString: OutputString = ""
 
+    OutputString = "Timeout 3" & vbNewLine 'useful for error checking
+
     Do
         OutputString = OutputString & Replace(Cells(RowNum, ColumnNum).Value, Chr(10), vbNewLine) & vbNewLine
         RowNum = RowNum + 1
     Loop Until IsEmpty(Cells(RowNum, ColumnNum))
+        
+    OutputString = OutputString & "Timeout 3"   'useful for errorchecking
+
 
     objFile.Write (OutputString)
 

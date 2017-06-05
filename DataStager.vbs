@@ -1,18 +1,30 @@
+Option Explicit
+
 Sub airtableCleaner()
-    Dim dict As Object
-    Set dict = CreateObject("Scripting.Dictionary")
-    Dim x As Integer
     Dim argCounter As Integer
-    Dim A As String
-    Dim B As String
     Dim folderLocation As Variant
     Dim Answer As VbMsgBoxResult
-        
+    Dim myPath As String
+    Dim folderPath As String
+    
+    folderPath = Application.ActiveWorkbook.Path
+    myPath = Application.ActiveWorkbook.FullName
+
     'Ask user if they want to run macro
-    Answer = MsgBox("Do you want to run this macro? Please use airtable Download as CSV - Column 1: Primary key, Column 2: Airtable Linkz", vbYesNo, "Run Macro")
+    Answer = MsgBox("Do you want to run this macro? From airtable, Col 1: primaryKey Col2: one image attachment)", vbYesNo, "Run Macro")
     If Answer = vbYes Then
     
-    folderLocation = Application.InputBox("C:\doge\ Enter a folder location where your image assets will be")
+    folderLocation = Application.InputBox("Give a subfolder name for directory. E.G. Batch1")
+    
+    'Creates new folder based on input
+    Dim strDir As String
+    strDir = folderPath & "\" & folderLocation
+     
+    If Dir(strDir, vbDirectory) = "" Then
+        MkDir strDir
+    Else
+        MsgBox "Directory exists."
+    End If
     
     
     'Cleanup to just amazons3 dl.airtable links
@@ -56,10 +68,10 @@ Sub airtableCleaner()
     ReplaceFormat:=False
 
     
-    'Create Batch File Maker Column D
+    'Create Column D batch files
         Range("D2").Select
     Range("D2").Formula = "=CONCATENATE(""COPY "",CHAR(34),C2,CHAR(34),"" "", CHAR(34), " & _
-                      Chr(34) & folderLocation & Chr(34) & ",A2,"".png"",CHAR(34))"
+                      Chr(34) & folderPath & "\" & folderLocation & "\" & Chr(34) & ",A2,"".png"",CHAR(34))"
     Range("D2").Select
     Selection.AutoFill Destination:=Range("D2:D" & argCounter + 1)
     
@@ -77,5 +89,3 @@ Sub airtableCleaner()
     
     End If
 End Sub
-
-

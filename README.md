@@ -37,9 +37,10 @@ See blog post for more details (later will update)
 
 Make all image assets locally from airtable. Ideally the least number of steps would be:
 
-1. Download the CSV file (Col 1:PrimaryKey, Col2: ImageLink) say `C:/AirtableDL`
-2. Click one button on the ribbon menu (Creates 4 columns of data, automatically downloads image col 2 in same location, automatically create and run batch file)
-3. All assets finished sitting inside same directory
+1. Download the CSV file (Col 1:PrimaryKey, Col2: ImageLink) anywhere you want (\Downloads\AirtableDL)
+2. Click one button on the ribbon menu (Creates 4 columns of data, automatically downloads image col 2 in same location, automatically create batch file from column 4, runs batch file)
+3. Ask user for a unique folder name to sit inside directory (\Downloads\AirtableDL\batch1)
+4. Cut+paste finished batch1 files wherever it needs to go
 
 Would solve a lot of issues related to digitally managing image assets in 2 clicks
 

@@ -102,16 +102,6 @@ Sub airtableCleaner()
     LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:= _
     False, ReplaceFormat:=False
     
-    '-------------------------------------------------------------------------
-    'Cleanup Broken links %5B1%5D in Column C  (only needed for extremePictureFinder)
-    '-------------------------------------------------------------------------
-    'Columns("C:C").Select
-    'Range("C40").Activate
-    'Selection.Replace What:="%5B1%5D", Replacement:="[1]", LookAt:=xlPart, _
-    'SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
-    'ReplaceFormat:=False
-    '-------------------------------------------------------------------------
-    
     'Cleanup Broken images using excelVBA downloader %5B1%5D = B1D
      Columns("C:C").Select
      Range("C40").Activate
@@ -145,8 +135,6 @@ Sub airtableCleaner()
     Call ExportRangetoBatch
     
     'Ask user to run bat file now or later
-    'Shell "cmd.exe /k cd " & folderPath & " && newcurl.bat"
-    'Shell "cmd.exe /k ""cd " & """ & ThisWorkbook.path & """ & " newcurl.bat"""
     shellCommand = """" & folderPath & "\" & "newcurl.bat" & """"
     Call Shell(shellCommand, vbNormalFocus)
     

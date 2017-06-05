@@ -1,14 +1,89 @@
+
 Option Explicit
+
+#If VBA7 And Win64 Then
+    Private Declare PtrSafe Function URLDownloadToFile Lib "urlmon" _
+      Alias "URLDownloadToFileA" ( _
+        ByVal pCaller As LongPtr, _
+        ByVal szURL As String, _
+        ByVal szFileName As String, _
+        ByVal dwReserved As LongPtr, _
+        ByVal lpfnCB As LongPtr _
+      ) As Long
+    Private Declare PtrSafe Function DeleteUrlCacheEntry Lib "Wininet.dll" _
+      Alias "DeleteUrlCacheEntryA" ( _
+        ByVal lpszUrlName As String _
+      ) As Long
+#Else
+    Private Declare Function URLDownloadToFile Lib "urlmon" _
+      Alias "URLDownloadToFileA" ( _
+        ByVal pCaller As Long, _
+        ByVal szURL As String, _
+        ByVal szFileName As String, _
+        ByVal dwReserved As Long, _
+        ByVal lpfnCB As Long _
+      ) As Long
+    Private Declare Function DeleteUrlCacheEntry Lib "Wininet.dll" _
+      Alias "DeleteUrlCacheEntryA" ( _
+        ByVal lpszUrlName As String _
+      ) As Long
+#End If
+
+Public Const ERROR_SUCCESS As Long = 0
+Public Const BINDF_GETNEWESTVERSION As Long = &H10
+Public Const INTERNET_FLAG_RELOAD As Long = &H80000000
+
+    'Global Variables for passing values b/w subs
+    Dim myPath As String
+    Dim folderPath As String
+    Dim folderLocation As Variant
+
+
+Sub dlStaplesImages()
+    Dim rw As Long, lr As Long, ret As Long, sIMGDIR As String, sWAN As String, sLAN As String
+
+    sIMGDIR = folderPath
+    'If Dir(sIMGDIR, vbDirectory) = "" Then MkDir sIMGDIR
+
+    With ActiveSheet    '<-set this worksheet reference properly!
+        lr = .Cells(Rows.Count, 1).End(xlUp).Row
+        For rw = 1 To lr 'rw to last row, assume first row is not header
+
+            sWAN = .Cells(rw, 2).Value2
+            sLAN = sIMGDIR & Chr(92) & Trim(Right(Replace(sWAN, Chr(47), Space(999)), 999))
+
+            Debug.Print sWAN
+            Debug.Print sLAN
+
+            If CBool(Len(Dir(sLAN))) Then
+                Call DeleteUrlCacheEntry(sLAN)
+                Kill sLAN
+            End If
+
+            ret = URLDownloadToFile(0&, sWAN, sLAN, BINDF_GETNEWESTVERSION, 0&)
+            
+            'Imported code to output success / fail
+            If ret = 0 Then
+            Range("E" & rw).Value = "File successfully downloaded"
+        Else
+            Range("E" & rw).Value = "Unable to download the file"
+        End If
+            
+            '.Cells(rw, 5) = ret
+            Next rw
+    End With
+
+End Sub
+
+
+
 
 Sub airtableCleaner()
     Dim argCounter As Integer
-    Dim folderLocation As Variant
     Dim Answer As VbMsgBoxResult
-    Dim myPath As String
-    Dim folderPath As String
-    
-    folderPath = Application.ActiveWorkbook.Path
-    myPath = Application.ActiveWorkbook.FullName
+
+    folderPath = Application.ActiveWorkbook.Path 'Example C:/downloads
+    myPath = Application.ActiveWorkbook.FullName 'Example C:/downloads/book1.csv
 
     'Ask user if they want to run macro
     Answer = MsgBox("Do you want to run this macro? From airtable, Col 1: primaryKey Col2: one image attachment)", vbYesNo, "Run Macro")
@@ -25,7 +100,6 @@ Sub airtableCleaner()
     Else
         MsgBox "Directory exists."
     End If
-    
     
     'Cleanup to just amazons3 dl.airtable links
     Columns("B:B").Select
@@ -86,6 +160,11 @@ Sub airtableCleaner()
         :=False, Transpose:=False
     Application.CutCopyMode = False
     
+    'Image downloader source files
+    Call dlStaplesImages
     
     End If
 End Sub
+
+
+

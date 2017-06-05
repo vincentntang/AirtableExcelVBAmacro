@@ -39,42 +39,6 @@ Public Const INTERNET_FLAG_RELOAD As Long = &H80000000
     Dim folderLocation As Variant
 
 
-Sub dlStaplesImages()
-    Dim rw As Long, lr As Long, ret As Long, sIMGDIR As String, sWAN As String, sLAN As String
-
-    sIMGDIR = folderPath
-    'If Dir(sIMGDIR, vbDirectory) = "" Then MkDir sIMGDIR
-
-    With ActiveSheet    '<-set this worksheet reference properly!
-        lr = .Cells(Rows.Count, 1).End(xlUp).Row
-        For rw = 1 To lr 'rw to last row, assume first row is not header
-
-            sWAN = .Cells(rw, 2).Value2
-            sLAN = sIMGDIR & Chr(92) & Trim(Right(Replace(sWAN, Chr(47), Space(999)), 999))
-
-            Debug.Print sWAN
-            Debug.Print sLAN
-
-            If CBool(Len(Dir(sLAN))) Then
-                Call DeleteUrlCacheEntry(sLAN)
-                Kill sLAN
-            End If
-
-            ret = URLDownloadToFile(0&, sWAN, sLAN, BINDF_GETNEWESTVERSION, 0&)
-            
-            'Imported code to output success / fail
-            If ret = 0 Then
-            Range("E" & rw).Value = "File successfully downloaded"
-        Else
-            Range("E" & rw).Value = "Unable to download the file"
-        End If
-            
-            '.Cells(rw, 5) = ret
-            Next rw
-    End With
-
-End Sub
-
 
 
 
@@ -86,7 +50,7 @@ Sub airtableCleaner()
     myPath = Application.ActiveWorkbook.FullName 'Example C:/downloads/book1.csv
 
     'Ask user if they want to run macro
-    Answer = MsgBox("Do you want to run this macro? From airtable, Col 1: primaryKey Col2: one image attachment)", vbYesNo, "Run Macro")
+    Answer = MsgBox("Run? Airtable - 1: primaryKey, 2: one image attachment)", vbYesNo, "Run Macro")
     If Answer = vbYes Then
     
     folderLocation = Application.InputBox("Give a subfolder name for directory. E.G. Batch1")
@@ -134,12 +98,15 @@ Sub airtableCleaner()
     LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:= _
     False, ReplaceFormat:=False
     
-    'Cleanup Broken links %5B1%5D in Column C
-    Columns("C:C").Select
-    Range("C40").Activate
-    Selection.Replace What:="%5B1%5D", Replacement:="[1]", LookAt:=xlPart, _
-    SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
-    ReplaceFormat:=False
+    '-------------------------------------------------------------------------
+    'Cleanup Broken links %5B1%5D in Column C  (only needed for extremePictureFinder, not with ExcelVBA URLimagefinder
+    '-------------------------------------------------------------------------
+    'Columns("C:C").Select
+    'Range("C40").Activate
+    'Selection.Replace What:="%5B1%5D", Replacement:="[1]", LookAt:=xlPart, _
+    'SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+    'ReplaceFormat:=False
+    '-------------------------------------------------------------------------
 
     
     'Create Column D batch files
@@ -160,10 +127,82 @@ Sub airtableCleaner()
         :=False, Transpose:=False
     Application.CutCopyMode = False
     
-    'Image downloader source files
+    'Image downloader to source folder
     Call dlStaplesImages
     
+    'Make the batch files using row data col D
+    Call ExportRangetoBatch
+    
+    'Ask user to run bat file now or later
+    Shell "cmd.exe /k cd " & folderPath & " && newcurl.bat"
+
+    
     End If
+End Sub
+
+'https://superuser.com/questions/1045707/create-bat-file-with-excel-data-with-vba    , modified copypasta code
+
+Sub ExportRangetoBatch()
+
+    Dim ColumnNum: ColumnNum = 4   ' Column D
+    Dim RowNum: RowNum = 1          ' Row to start on
+    Dim objFSO, objFile
+
+    Set objFSO = CreateObject("Scripting.FileSystemObject")
+    Set objFile = objFSO.CreateTextFile(folderPath & "\newcurl.bat")    'Output Path
+
+    Dim OutputString: OutputString = ""
+
+    Do
+        OutputString = OutputString & Replace(Cells(RowNum, ColumnNum).Value, Chr(10), vbNewLine) & vbNewLine
+        RowNum = RowNum + 1
+    Loop Until IsEmpty(Cells(RowNum, ColumnNum))
+
+    objFile.Write (OutputString)
+
+    Set objFile = Nothing
+    Set objFSO = Nothing
+
+End Sub
+
+
+
+'https://stackoverflow.com/questions/31359682/with-excel-vba-save-web-image-to-disk/31360105#31360105      , modified copypasta code
+
+Sub dlStaplesImages()
+    Dim rw As Long, lr As Long, ret As Long, sIMGDIR As String, sWAN As String, sLAN As String
+
+    sIMGDIR = folderPath
+    'If Dir(sIMGDIR, vbDirectory) = "" Then MkDir sIMGDIR
+
+    With ActiveSheet    '<-set this worksheet reference properly!
+        lr = .Cells(Rows.Count, 1).End(xlUp).Row
+        For rw = 1 To lr 'rw to last row, assume first row is not header
+
+            sWAN = .Cells(rw, 2).Value2
+            sLAN = sIMGDIR & Chr(92) & Trim(Right(Replace(sWAN, Chr(47), Space(999)), 999))
+
+            Debug.Print sWAN
+            Debug.Print sLAN
+
+            If CBool(Len(Dir(sLAN))) Then
+                Call DeleteUrlCacheEntry(sLAN)
+                Kill sLAN
+            End If
+
+            ret = URLDownloadToFile(0&, sWAN, sLAN, BINDF_GETNEWESTVERSION, 0&)
+            
+            'Imported code to output success / fail
+            If ret = 0 Then
+            Range("E" & rw).Value = "File successfully downloaded"
+        Else
+            Range("E" & rw).Value = "Unable to download the file"
+        End If
+            
+            '.Cells(rw, 5) = ret
+            Next rw
+    End With
+
 End Sub
 
 

@@ -114,46 +114,62 @@ Sub airtableCleaner()
      SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
      ReplaceFormat:=False
 
+    'Fixed so easier to look at, forget formula
+    Dim A As String
+    Dim B As String
+    Dim row As Long
+    
+    Range("D2").Select
+    For row = 1 To argCounter
+        A = Cell.Value(row, 1)
+        B = Cell.Value(row, 3)
+        
+        A = Chr(34) & folderPath & "\" & A
+        B = Chr(34) & folderPath & "\" & folderLocation & "\" & B
+        
+        Cell.Value(row, 4) = "Copy " & A & " " & B
+    Next row
+        
+    
     
     'Create Column D batch files
     'e.g. COPY "aQRTDdkYRB2elYTztMJN_image.png" "C:\Users\Vincent\Downloads\finalTest2\FOO\B3C1221.png"
-                    Range("D2").Formula = _
-                    "=CONCATENATE(""COPY "",CHAR(34),C2,CHAR(34),"" "", CHAR(34), " & _
-                          Chr(34) & folderPath & "\" & folderLocation & "\" & Chr(34) & _
-                          ",A2,"".png"",CHAR(34))"
+                  '  Range("D2").Formula = _
+                  '  "=CONCATENATE(""COPY "",CHAR(34),C2,CHAR(34),"" "", CHAR(34), " & _
+                    '      Chr(34) & folderPath & "\" & folderLocation & "\" & Chr(34) & _
+                  '        ",A2,"".png"",CHAR(34))"
                           
                     'range form
-                    Range("D2").Formula = "=CONCATENATE(""COPY "",CHAR(34),C5,CHAR(34),"" "", CHAR(34), " & _
-                      Chr(34) & folderLocation & Chr(34) & ",A5,"".png"",CHAR(34))"
+               '     Range("D2").Formula = "=CONCATENATE(""COPY "",CHAR(34),C5,CHAR(34),"" "", CHAR(34), " & _
+               '       Chr(34) & folderLocation & Chr(34) & ",A5,"".png"",CHAR(34))"
                           
                     'clean copy ORIGINAL SIDDARTH ALL STATEMENTS MUST HAVE "" in them or & &
-                    Range("D2").Formula = _
-                    "=CONCATENATE(""COPY "",CHAR(34),C5,CHAR(34),"" "", CHAR(34), " & _
-                      Chr(34) & folderLocation & Chr(34) & _
-                      ",A5,"".png"",CHAR(34))"
+                  '  Range("D2").Formula = _
+                  '  "=CONCATENATE(""COPY "",CHAR(34),C5,CHAR(34),"" "", CHAR(34), " & _
+                    '  Chr(34) & folderLocation & Chr(34) & _
+                     ' ",A5,"".png"",CHAR(34))"
                     
                     
                     'Hashing Copy #2 ORIGINAL SIDDARTH modified with folder location. IF "" Commas allowed, but if no & commas allowed
-                    Range("D2").Formula = _
-                    "=CONCATENATE(""COPY "",CHAR(34),C2,CHAR(34),"" "", CHAR(34), " & _
-                          Chr(34) & folderPath & "\" & folderLocation & "\" & Chr(34) & _
-                          ",A2,"".png"",CHAR(34))"
+                   ' Range("D2").Formula = _
+                  '  "=CONCATENATE(""COPY "",CHAR(34),C2,CHAR(34),"" "", CHAR(34), " & _
+                         ' Chr(34) & folderPath & "\" & folderLocation & "\" & Chr(34) & _
+                         ' ",A2,"".png"",CHAR(34))"
                           
                     'Modifying Parameters Copy #3 - attempt at adding a line at the 2nd parameter
-                    Range("D2").Formula = _
-                    "=CONCATENATE(""COPY ""," & _
-                    CHAR(34) & C2 & CHAR(34) & " " & CHAR(34) & _
-                          Chr(34) & folderPath & "\" & folderLocation & "\" & Chr(34) & _
-                          ",A2,"".png"",CHAR(34))"
+                    'Range("D2").Formula = _
+                    '"=CONCATENATE(""COPY ""," & _
+                    'CHAR(34) & C2 & CHAR(34) & " " & CHAR(34) & _
+                          'Chr(34) & folderPath & "\" & folderLocation & "\" & Chr(34) & _
+                          '",A2,"".png"",CHAR(34))"
                 
-                    'Adding in the 3rd line
-                    Range("D2").Formula = _
-                    "=CONCATENATE(""COPY ""," & _
-                    CHAR(34) & C2 & CHAR(34) & " " & CHAR(34) & _
-                    Chr(34) & folderPath & "\" & folderLocation & "\" & Chr(34) & _
-                    ",A2,"".png"",CHAR(34))"
-                    
-                    
+                    'Adding in the finalized line
+                    'Range("D2").Formula = _
+                    '"=CONCATENATE(""COPY ""," & _
+                    'Chr(34) & folderPath & "\" & _
+                   ' ",C2, CHAR(34),"" "", " & _
+                   ' Chr(34) & folderPath & "\" & folderLocation & "\" & _
+                   ' ",A2,"".png"",CHAR(34))"
                    
                           
                     'hashing out copy
@@ -238,7 +254,7 @@ Sub dlStaplesImages()
     'If Dir(sIMGDIR, vbDirectory) = "" Then MkDir sIMGDIR
 
     With ActiveSheet    '<-set this worksheet reference properly!
-        lr = .Cells(Rows.Count, 1).End(xlUp).Row
+        lr = .Cells(Rows.Count, 1).End(xlUp).row
         For rw = 1 To lr 'rw to last row, assume first row is not header
 
             sWAN = .Cells(rw, 2).Value2

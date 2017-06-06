@@ -35,18 +35,13 @@ Public Const INTERNET_FLAG_RELOAD As Long = &H80000000
     'Global Variables for passing values b/w subs
     Dim myPath As String
     Dim folderPath As String
-    Dim folderLocation As Variant
-
-
-
+    Dim folderLocation As Variant 'not used
 
 
 Sub airtableCleaner()
     Dim argCounter As Integer
     Dim Answer As VbMsgBoxResult
     
-    Dim strProgramName As String
-    Dim strArgument As String
     Dim shellCommand As String
     
     Dim row As Integer
@@ -55,7 +50,7 @@ Sub airtableCleaner()
 
 
     folderPath = Application.ActiveWorkbook.Path 'Example C:/downloads
-    myPath = Application.ActiveWorkbook.FullName 'Example C:/downloads/book1.csv
+    myPath = Application.ActiveWorkbook.FullName 'Example C:/downloads/book1.csv - not used
 
     'Ask user if they want to run macro
     Answer = MsgBox("Run? Airtable - 1: primaryKey, 2: one image attachment", vbYesNo, "Run Macro")
@@ -91,7 +86,6 @@ Sub airtableCleaner()
         If ActiveCell.Value = "" Then Exit Do
         ActiveCell.Offset(1, 0).Activate
         argCounter = argCounter + 1
-
     Loop
     
     'Copy Image Links to new cells to format in Column C
@@ -112,8 +106,6 @@ Sub airtableCleaner()
      Selection.Replace What:="%5B1%5D", Replacement:="%%5B1%%5D", LookAt:=xlPart, _
      SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
      ReplaceFormat:=False
-
- 'Selection.Replace What:="%5B1%5D", Replacement:="B1D", LookAt:=xlPart, _
 
     'Create Column D batch files
     For row = 2 To argCounter + 1
@@ -155,7 +147,7 @@ End Sub
 Sub ExportRangetoBatch()
 
     Dim ColumnNum: ColumnNum = 4   ' Column D
-    Dim RowNum: RowNum = 1          ' Row to start on
+    Dim RowNum: RowNum = 1         ' Row to start on
     Dim objFSO, objFile
 
     Set objFSO = CreateObject("Scripting.FileSystemObject")
@@ -188,7 +180,6 @@ Sub dlStaplesImages()
     Dim rw As Long, lr As Long, ret As Long, sIMGDIR As String, sWAN As String, sLAN As String
 
     sIMGDIR = folderPath
-    'If Dir(sIMGDIR, vbDirectory) = "" Then MkDir sIMGDIR
 
     With ActiveSheet    '<-set this worksheet reference properly!
         lr = .Cells(Rows.Count, 1).End(xlUp).row
@@ -209,12 +200,11 @@ Sub dlStaplesImages()
             
             'Imported code to output success / fail
             If ret = 0 Then
-            Range("E" & rw).Value = "File successfully downloaded"
-        Else
-            Range("E" & rw).Value = "Unable to download the file"
-        End If
+                Range("E" & rw).Value = "File successfully downloaded"
+            Else
+                Range("E" & rw).Value = "Unable to download the file"
+            End If
             
-            '.Cells(rw, 5) = ret
             Next rw
     End With
 

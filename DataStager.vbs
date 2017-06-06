@@ -58,7 +58,7 @@ Sub airtableCleaner()
     myPath = Application.ActiveWorkbook.FullName 'Example C:/downloads/book1.csv
 
     'Ask user if they want to run macro
-    Answer = MsgBox("Run? Airtable - 1: primaryKey, 2: one image attachment)", vbYesNo, "Run Macro")
+    Answer = MsgBox("Run? Airtable - 1: primaryKey, 2: one image attachment", vbYesNo, "Run Macro")
     If Answer = vbYes Then
     
     folderLocation = Application.InputBox("Give a subfolder name for directory. E.G. Batch1")
@@ -109,11 +109,12 @@ Sub airtableCleaner()
     'Cleanup Broken images using excelVBA downloader %5B1%5D = B1D
      Columns("C:C").Select
      Range("C40").Activate
-     Selection.Replace What:="%5B1%5D", Replacement:="B1D", LookAt:=xlPart, _
+     Selection.Replace What:="%5B1%5D", Replacement:="%%5B1%%5D", LookAt:=xlPart, _
      SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
      ReplaceFormat:=False
 
-    
+ 'Selection.Replace What:="%5B1%5D", Replacement:="B1D", LookAt:=xlPart, _
+
     'Create Column D batch files
     For row = 2 To argCounter + 1
         A = Cells(row, 1).Value

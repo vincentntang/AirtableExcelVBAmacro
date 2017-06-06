@@ -1,4 +1,3 @@
-
 Option Explicit
 
 #If VBA7 And Win64 Then
@@ -49,6 +48,11 @@ Sub airtableCleaner()
     Dim strProgramName As String
     Dim strArgument As String
     Dim shellCommand As String
+    
+    Dim row As Integer
+    Dim A As String
+    Dim C As String
+
 
     folderPath = Application.ActiveWorkbook.Path 'Example C:/downloads
     myPath = Application.ActiveWorkbook.FullName 'Example C:/downloads/book1.csv
@@ -111,11 +115,15 @@ Sub airtableCleaner()
 
     
     'Create Column D batch files
-        Range("D2").Select
-    Range("D2").Formula = "=CONCATENATE(""COPY "",CHAR(34),C2,CHAR(34),"" "", CHAR(34), " & _
-                      Chr(34) & folderPath & "\" & folderLocation & "\" & Chr(34) & ",A2,"".png"",CHAR(34))"
-    Range("D2").Select
-    Selection.AutoFill Destination:=Range("D2:D" & argCounter + 1)
+    For row = 2 To argCounter + 1
+        A = Cells(row, 1).Value
+        C = Cells(row, 3).Value
+        
+        A = """" & folderPath & "\" & folderLocation & "\" & A & ".png" & """"
+        C = """" & folderPath & "\" & C & """"
+        
+        Cells(row, 4).Value = "Copy " & C & " " & A
+    Next row
     
     'Delete header row 1 information
     Rows("1:1").Select
@@ -182,7 +190,7 @@ Sub dlStaplesImages()
     'If Dir(sIMGDIR, vbDirectory) = "" Then MkDir sIMGDIR
 
     With ActiveSheet    '<-set this worksheet reference properly!
-        lr = .Cells(Rows.Count, 1).End(xlUp).Row
+        lr = .Cells(Rows.Count, 1).End(xlUp).row
         For rw = 1 To lr 'rw to last row, assume first row is not header
 
             sWAN = .Cells(rw, 2).Value2
@@ -210,6 +218,4 @@ Sub dlStaplesImages()
     End With
 
 End Sub
-
-
 

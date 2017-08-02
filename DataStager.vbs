@@ -1,5 +1,6 @@
 Option Explicit
 
+' https://stackoverflow.com/questions/31359682/with-excel-vba-save-web-image-to-disk/31360105#31360105, URL download to file
 #If VBA7 And Win64 Then
     Private Declare PtrSafe Function URLDownloadToFile Lib "urlmon" _
       Alias "URLDownloadToFileA" ( _
@@ -31,6 +32,8 @@ Option Explicit
 Public Const ERROR_SUCCESS As Long = 0
 Public Const BINDF_GETNEWESTVERSION As Long = &H10
 Public Const INTERNET_FLAG_RELOAD As Long = &H80000000
+                
+                ' End of stackoverflow code snippet reference for URLdownloadToFile
 
     'Global Variables for passing values b/w subs
     Dim myPath As String
@@ -142,7 +145,7 @@ Sub airtableCleaner()
     End If
 End Sub
 
-'https://superuser.com/questions/1045707/create-bat-file-with-excel-data-with-vba    , modified copypasta code
+'https://superuser.com/questions/1045707/create-bat-file-with-excel-data-with-vba ,For exporting column data to batch file to run in shell , modified copypasta code
 
 Sub ExportRangetoBatch()
 
@@ -174,7 +177,7 @@ End Sub
 
 
 
-'https://stackoverflow.com/questions/31359682/with-excel-vba-save-web-image-to-disk/31360105#31360105      , modified copypasta code
+'https://stackoverflow.com/questions/31359682/with-excel-vba-save-web-image-to-disk/31360105#31360105      , modified copypasta code, URLdownloadToFile
 
 Sub dlStaplesImages()
     Dim rw As Long, lr As Long, ret As Long, sIMGDIR As String, sWAN As String, sLAN As String

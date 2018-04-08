@@ -125,6 +125,13 @@ Sub airtableCleaner()
         :=False, Transpose:=False
     Application.CutCopyMode = False
     
+    'Cleanup %20 ignore % in batch file. https://stackoverflow.com/questions/1907057/ignore-percent-sign-in-batch-file
+     Columns("D:D").Select
+     Range("D40").Activate
+     Selection.Replace What:="%2", Replacement:="%%2", LookAt:=xlPart, _
+     SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+     ReplaceFormat:=False
+    
     'Image downloader to source folder
     Call dlStaplesImages
     

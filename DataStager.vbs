@@ -70,18 +70,6 @@ Sub airtableCleaner()
     Else
         MsgBox "Directory exists."
     End If
-    
-    'Cleanup to just amazons3 dl.airtable links
-    Columns("B:B").Select
-    Selection.Replace What:="* ", Replacement:="", LookAt:=xlPart, _
-        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
-        ReplaceFormat:=False
-    Selection.Replace What:="(", Replacement:="", LookAt:=xlPart, _
-        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
-        ReplaceFormat:=False
-    Selection.Replace What:=")", Replacement:="", LookAt:=xlPart, _
-        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
-        ReplaceFormat:=False
 
     'Count Cells
     Range("B2").Activate
@@ -90,6 +78,11 @@ Sub airtableCleaner()
         ActiveCell.Offset(1, 0).Activate
         argCounter = argCounter + 1
     Loop
+    
+    'Column B Grab only URLs from original values
+    For row = 2 To argCounter + 1
+        Cells(row, 2).Value = ExtractURL(Cells(row, 2).Value)
+    Next row
     
     'Copy Image Links to new cells to format in Column C
     Columns("B:B").Select
@@ -174,6 +167,26 @@ Sub ExportRangetoBatch()
     Set objFSO = Nothing
 
 End Sub
+' https://stackoverflow.com/questions/8146485/returning-a-regex-match-in-vba-excel
+Function ExtractURL(ByVal text As String) As String
+
+Dim result As String
+Dim allMatches As Object
+Dim RE As Object
+Set RE = CreateObject("vbscript.regexp")
+
+RE.Pattern = "(http[s?]:\/\/.*(.png|.jpg|.pdf|.mp4|.mp3|.docx))"
+RE.Global = True
+RE.IgnoreCase = True
+Set allMatches = RE.Execute(text)
+
+If allMatches.Count <> 0 Then
+    result = allMatches.Item(0).submatches.Item(0)
+End If
+
+ExtractURL = result
+
+End Function
 
 
 

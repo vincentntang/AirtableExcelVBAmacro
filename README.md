@@ -2,28 +2,9 @@
 
 # Airtable Bulk Downloader And Renamer Overview
 
-AirtableExcelVBA Macro takes a CSV output from Airtable in a 2 column format. Column A is the primaryKey, column B is the image asset 
-name. It downloads all image URLs present, and renames those images based off of column A into a new subfolder.
+Checkout the 14 minute video I made. It explains what airtable is, what this macro was for, how it works behind the scenes, etc.
 
-Sample CSV Download from Airtable
-
-![](https://i.imgur.com/oGEdmIr.png)
-
-Sample CSV Output after running Macro
-
-![](https://i.imgur.com/OfrMwNu.png)
-
-Images / Staged Assets created after running Macro
-
-![](https://i.imgur.com/HXkhjVR.png)
-
-.bat helper file created after running macro
-
-![](https://i.imgur.com/ICKNqoA.png)
-
-### Demonstration
-
-![](https://i.imgur.com/ZKZayEy.gif)
+[![Watch the video](https://i.imgur.com/I81A3Sc.png)](https://vimeo.com/312658024)
 
 ### Prerequisites
 

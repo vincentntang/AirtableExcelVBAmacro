@@ -4,7 +4,7 @@
 
 Checkout the 14 minute video I made. It explains what airtable is, what this macro was for, how it works behind the scenes, etc.
 
-[![Watch the video](https://i.imgur.com/I81A3Sc.png)](https://vimeo.com/312658024)
+[![Watch the video](https://i.imgur.com/9Yb69fC.png)](https://vimeo.com/312658024)
 
 ### Prerequisites
 

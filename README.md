@@ -1,10 +1,10 @@
 ![](https://i.imgur.com/KijwQNZ.png)
 
-# Airtable Bulk Downloader And Renamer Overview
+## Summary
 
-Checkout the 14 minute video I made. It explains what airtable is, what this macro was for, how it works behind the scenes, etc.
+Airtable is a relational database management system. This is a excel VBA script for downloading and renaming images off a CSV export.
 
-[![Watch the video](https://i.imgur.com/9Yb69fC.png)](https://vimeo.com/312658024)
+Read more about it here - https://community.airtable.com/t/bulk-downloader-and-renamer-using-excel-vba/4913
 
 ### Prerequisites
 
@@ -42,6 +42,4 @@ You can use this macro for things besides airtable, just format it in the same o
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
-## Forum Post
 
-Read more at https://community.airtable.com/t/bulk-downloader-and-renamer-using-excel-vba/4913
